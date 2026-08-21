@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name" defaultValue="smart-manage"/>
+    <springProperty scope="context" name="PORT" source="server.port"/>
+
+    <property name="LOG_DIR" value="./log/"/>
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+    <property name="MAX_HISTORY" value="30"/>
+    <property name="CHARSET" value="utf-8"/>
+
+    <!-- PATTERN CONFIG -->
+    <!-- 彩色日志格式 -->
+    <property name="PATTERN_CONSOLE" value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %cyan(%logger{50}) - %msg%n"/>
+    <!-- log日志文件格式 -->
+    <property name="PATTERN_BUSINESS"
+              value="%yellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%5p) %green(${PID}) %magenta([%thread]) %cyan(%-40.40logger{39}): %msg%n"/>
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${PATTERN_CONSOLE}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!-- 全部日志 appender  -->
+    <appender name="ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${APPLICATION_NAME}-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${APPLICATION_NAME}-info-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <!-- 日志最大的历史 180天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- MAX_FILE_SIZE:这是活动文件的大小，默认值是10MB，这里设置为50MB -->
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${PATTERN_BUSINESS}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!-- 出错日志 appender  -->
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${APPLICATION_NAME}-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${APPLICATION_NAME}-error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <!-- 日志最大的历史 180天 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- MAX_FILE_SIZE:这是活动文件的大小，默认值是10MB，这里设置为50MB -->
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>${PATTERN_BUSINESS}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <!-- 只打印错误日志 -->
+            <level>ERROR</level>
+        </filter>
+    </appender>
+    <!-- 全部日志文件输出 -->
+    <!-- 配置扫描包路径，追加日志到ALL的appender中 -->
+    <!-- 若是additivity设为true，则子Logger不止会在自己的appender里输出，还会在root的logger的appender里输出-->
+    <!-- 指定项目中某个包，当有日志操作行为时的日志记录级别 -->
+    <!-- com.sunyard.qpay.dao为根包，也就是只要是发生在这个根包下面的所有日志操作行为的权限都是DEBUG -->
+    <!-- 级别依次为【从高到低】：FATAL > ERROR > WARN > INFO > DEBUG > TRACE  -->
+    <logger name="com.sunyard.qpay.dao" additivity="false" level="DEBUG">
+        <appender-ref ref="ALL"/>
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <root level="INFO" additivity="false">
+        <appender-ref ref="ALL"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+
+</configuration>

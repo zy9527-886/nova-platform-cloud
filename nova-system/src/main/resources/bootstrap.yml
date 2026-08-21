@@ -1,0 +1,31 @@
+# Tomcat
+server:
+  port: 820
+# Spring
+spring:
+  application:
+    name: nova-system
+  profiles:
+    # 环境配置
+    active: @profiles.active@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.config.addr@
+        namespace: @nacos.config.namespace@
+        # 服务配置
+      config:
+        shared-configs:
+          - data-id: nova-common.yaml
+            group: @nacos.config.group@
+            refresh: true
+        server-addr: @nacos.config.addr@ # 服务配置中心地址
+        file-extension: yaml # 指定 yaml 格式的配置
+        namespace: @nacos.config.namespace@
+        group: @nacos.config.group@
+
+logging:
+  config: classpath:logback-spring.xml
+
+
+

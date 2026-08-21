@@ -1,0 +1,43 @@
+### GET request to example server
+POST 127.0.0.1:8866/system/sysUser/page
+Content-Type: application/json
+
+{
+
+}
+
+### GET request to example server
+GET 127.0.0.1:8866/system/sysUser/getById/446901116721532928
+Content-Type: application/json
+
+{
+
+}
+
+### GET request to example server
+POST 127.0.0.1:8866/system/sysUser/saveOrUpdate
+Content-Type: application/json
+
+{
+"userNm": "admin",
+"rmk":"testtstt117"
+}
+
+
+### GET request to example server
+POST 127.0.0.1:8866/system/sysOrg/page
+Content-Type: application/json
+
+{
+
+}
+
+
+### GET request to example server
+POST 127.0.0.1:8866/system/sysOrg/saveOrUpdate
+Content-Type: application/json
+
+{
+  "orgCd": "998765",
+  "orgNm":"test111"
+}

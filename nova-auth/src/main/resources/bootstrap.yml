@@ -1,0 +1,29 @@
+# Tomcat
+server:
+  port: 821
+
+# Spring
+spring:
+  application:
+    name: nova-auth
+  profiles:
+    active: @profiles.active@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: @nacos.config.addr@
+        namespace: @nacos.config.namespace@
+      config:
+        shared-configs:
+          - data-id: nova-common.yaml
+            group: @nacos.config.group@
+            refresh: true
+        server-addr: @nacos.config.addr@
+        file-extension: yaml
+        namespace: @nacos.config.namespace@
+        group: @nacos.config.group@
+
+logging:
+  config: classpath:logback-spring.xml
+
+

@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.nova.platform</groupId>
+    <artifactId>nova-platform</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>nova-gateway</module>
+        <module>nova-common</module>
+        <module>nova-ai</module>
+        <module>nova-auth</module>
+        <module>nova-system</module>
+    </modules>
+
+    <properties>
+        <spring-boot.version>3.0.2</spring-boot.version>
+        <spring-cloud.version>2022.0.0</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
+        <openapi-ui.version>2.2.0</openapi-ui.version>
+        <commons.io.version>2.11.0</commons.io.version>
+        <poi.version>4.1.2</poi.version>
+        <fastjson.version>2.0.20</fastjson.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <lombok.version>1.18.22</lombok.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+        <db2jcc.version>db2jcc4</db2jcc.version>
+        <druid.version>1.2.8</druid.version>
+        <owasp.version>8.2.1</owasp.version>
+        <xxl-job-core.version>2.4.0</xxl-job-core.version>
+        <drools.version>7.6.0.Final</drools.version>
+        <perf4j.version>0.9.16</perf4j.version>
+        <java-jwt.version>4.4.0</java-jwt.version>
+        <validation.version>2.0.1.Final</validation.version>
+        <hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
+        <bcprov-jdk15to18.version>1.70</bcprov-jdk15to18.version>
+        <sa-token.version>1.46.0</sa-token.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>20</maven.compiler.source>
+        <maven.compiler.target>20</maven.compiler.target>
+
+        <arcu-eftp.version>0.0.2-RELEASES</arcu-eftp.version>
+        <arcu-jt400.version>1.0.0</arcu-jt400.version>
+        <xstream.version>1.4.20</xstream.version>
+        <hutool.version>5.8.15</hutool.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- SpringCloud 微服务 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- SpringCloud Alibaba 微服务 -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- SpringBoot 依赖配置 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- openapi依赖配置 -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${openapi-ui.version}</version>
+            </dependency>
+
+
+            <!-- io常用工具类 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+
+            <!-- excel工具 -->
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <!-- JSON 解析器和生成器 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!--lombok-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!--orm系列 start-->
+            <!-- mybatis plus 代码生成器 -->
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-spring-boot3-starter</artifactId>
+                <version>1.9.8</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-processor</artifactId>
+                <version>1.9.8</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!--            <dependency>-->
+            <!--                <groupId>com.baomidou</groupId>-->
+            <!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
+            <!--                <version>${mybatis-plus.version}</version>-->
+            <!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>com.baomidou</groupId>-->
+            <!--                <artifactId>mybatis-plus-generator</artifactId>-->
+            <!--                <version>${mybatis-plus.version}</version>-->
+            <!--            </dependency>-->
+
+            <!-- pagehelper 分页插件 -->
+            <!--            <dependency>-->
+            <!--                <groupId>com.github.pagehelper</groupId>-->
+            <!--                <artifactId>pagehelper-spring-boot-starter</artifactId>-->
+            <!--                <version>${pagehelper.boot.version}</version>-->
+            <!--            </dependency>-->
+
+            <!-- oracle驱动-->
+            <!--            <dependency>-->
+            <!--                <groupId>com.oracle.database.jdbc</groupId>-->
+            <!--                <artifactId>ojdbc8</artifactId>-->
+            <!--                <version>${ojdbc8.version}</version>-->
+            <!--            </dependency>-->
+
+            <dependency>
+                <groupId>com.ibm.db2.jcc</groupId>
+                <artifactId>db2jcc</artifactId>
+                <version>${db2jcc.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.7.11</version>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.33</version>
+            </dependency>
+
+            <!-- 连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <!--orm系列 end-->
+
+            <!-- jar 包安全检查 -->
+            <dependency>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>${owasp.version}</version>
+            </dependency>
+
+            <!-- xxl-job-core -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job-core.version}</version>
+            </dependency>
+
+            <!-- drools -->
+            <dependency>
+                <groupId>org.drools</groupId>
+                <artifactId>drools-core</artifactId>
+                <version>${drools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.drools</groupId>
+                <artifactId>drools-compiler</artifactId>
+                <version>${drools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie</groupId>
+                <artifactId>kie-api</artifactId>
+                <version>${drools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie</groupId>
+                <artifactId>kie-spring</artifactId>
+                <version>${drools.version}</version>
+            </dependency>
+
+            <!-- drools -->
+            <dependency>
+                <groupId>org.perf4j</groupId>
+                <artifactId>perf4j</artifactId>
+                <version>${perf4j.version}</version>
+            </dependency>
+
+            <!-- jwt -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jwt.version}</version>
+            </dependency>
+
+            <!-- 参数校验 -->
+            <!--            <dependency>-->
+            <!--                <groupId>javax.validation</groupId>-->
+            <!--                <artifactId>validation-api</artifactId>-->
+            <!--                <version>${validation.version}</version>-->
+            <!--            </dependency>-->
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.20</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot3-starter</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-redis-jackson</artifactId>
+                <version>${sa-token.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${openapi-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.owasp</groupId>
+            <artifactId>dependency-check-maven</artifactId>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <activation>
+                <!--默认为dev环境打包方式-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>vedioLocal</id>
+            <properties>
+                <profiles.active>vedioLocal</profiles.active>
+                <nacos.config.addr>127.0.0.1:8866</nacos.config.addr>
+                <nacos.config.namespace>vedioLocal</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profiles.active>dev</profiles.active>
+                <nacos.config.addr>139.224.192.92:8888</nacos.config.addr>
+                <nacos.config.namespace>dev</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit</id>
+            <properties>
+                <profiles.active>sit</profiles.active>
+                <nacos.config.addr>10.0.84.111:8866</nacos.config.addr>
+                <nacos.config.namespace>sit</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+        <profile>
+            <id>uat</id>
+            <properties>
+                <profiles.active>uat</profiles.active>
+                <nacos.config.addr>10.0.84.111:8866</nacos.config.addr>
+                <nacos.config.namespace>uat</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+                <nacos.config.addr>10.0.84.111:8866</nacos.config.addr>
+                <nacos.config.namespace>sit</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <nacos.config.addr>10.0.84.111:8866</nacos.config.addr>
+                <nacos.config.namespace>prod</nacos.config.namespace>
+                <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
+            </properties>
+        </profile>
+    </profiles>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.9.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.6.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>3.0.0</version>
+                </plugin>
+                <!-- jar 包安全检查插件 -->
+                <!--    <plugin>-->
+                <!--        <groupId>org.owasp</groupId>-->
+                <!--        <artifactId>dependency-check-maven</artifactId>-->
+                <!--        <version>${owasp.version}</version>-->
+                <!--        <executions>-->
+                <!--            <execution>-->
+                <!--                <goals>-->
+                <!--                    <goal>check</goal>-->
+                <!--                </goals>-->
+                <!--            </execution>-->
+                <!--        </executions>-->
+                <!--    </plugin>-->
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

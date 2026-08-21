@@ -1,0 +1,56 @@
+# Maven build output
+target/
+**/target/
+
+# Packaged artifacts and compiled classes
+*.class
+*.jar
+*.war
+*.ear
+
+# Logs
+log/
+logs/
+*.log
+*.log.*
+
+# Local environment files
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.yaml
+application-local.properties
+bootstrap-local.yml
+bootstrap-local.yaml
+bootstrap-local.properties
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tool caches
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.flattened-pom.xml
+
+# AI/local agent files
+.agent/
+.agents/
+.claude/
+.codex/
+skills-lock.json
