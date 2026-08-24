@@ -72,3 +72,14 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {}
+
+
+### 7. roleAndPaths
+# GET /auth/roleAndPaths
+#
+# Request headers:
+# - Authorization: Bearer {{accessToken}}
+GET {{baseUrl}}/system/roleAndPaths
+Content-Type: application/json
+
+{}
