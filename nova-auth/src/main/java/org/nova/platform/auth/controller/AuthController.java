@@ -56,7 +56,7 @@ public class AuthController {
 //        return ResultUtils.suc(authService.getCurrentMenus());
 //    }
 
-    @GetMapping
+    @GetMapping("/resources")
     @Operation(description = "current user menus and button permissions")
     public Object resources() {
         return ResultUtils.suc(authService.getCurrentResources());
