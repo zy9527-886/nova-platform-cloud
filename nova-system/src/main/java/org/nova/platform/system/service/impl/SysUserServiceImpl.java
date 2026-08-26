@@ -42,6 +42,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
 
     @Transactional
+    @Override
     public int saveOrUpdate(SysUserDto user) {
         SysUser sysUser = BeanUtil.copyProperties(user, SysUser.class);
         String id = IdGenerate.getIdStr();

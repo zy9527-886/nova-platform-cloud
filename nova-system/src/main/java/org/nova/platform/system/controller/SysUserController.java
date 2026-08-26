@@ -3,8 +3,6 @@ package org.nova.platform.system.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.nova.platform.common.core.http.ResultUtils;
-import org.nova.platform.common.database.controller.BaseController;
-import org.nova.platform.system.entity.SysUser;
 import org.nova.platform.system.entity.dto.SysUserDto;
 import org.nova.platform.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;

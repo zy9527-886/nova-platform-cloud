@@ -205,8 +205,9 @@ public class ValidUtil
      */
     public static boolean isEmail(String str)
     {
-        if (null == str || str.trim().length() <= 0)
+        if (null == str || str.trim().length() <= 0){
             return false;
+        }
         return Regular(str, EMAIL);
     }
     /**
