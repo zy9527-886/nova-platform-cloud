@@ -17,15 +17,15 @@
     </modules>
 
     <properties>
-        <spring-boot.version>3.0.2</spring-boot.version>
-        <spring-cloud.version>2022.0.0</spring-cloud.version>
-        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
+        <spring-boot.version>3.2.4</spring-boot.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <openapi-ui.version>2.2.0</openapi-ui.version>
         <commons.io.version>2.11.0</commons.io.version>
         <poi.version>4.1.2</poi.version>
         <fastjson.version>2.0.20</fastjson.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <lombok.version>1.18.22</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
         <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <db2jcc.version>db2jcc4</db2jcc.version>
         <druid.version>1.2.8</druid.version>
@@ -40,8 +40,8 @@
         <sa-token.version>1.46.0</sa-token.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>20</maven.compiler.source>
-        <maven.compiler.target>20</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <arcu-eftp.version>0.0.2-RELEASES</arcu-eftp.version>
         <arcu-jt400.version>1.0.0</arcu-jt400.version>
@@ -290,19 +290,19 @@
 
     <profiles>
         <profile>
-            <activation>
-                <!--默认为dev环境打包方式-->
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <id>vedioLocal</id>
+            <id>local</id>
             <properties>
-                <profiles.active>vedioLocal</profiles.active>
+                <profiles.active>local</profiles.active>
                 <nacos.config.addr>127.0.0.1:8866</nacos.config.addr>
                 <nacos.config.namespace>vedioLocal</nacos.config.namespace>
                 <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
             </properties>
         </profile>
         <profile>
+            <activation>
+                <!--默认为dev环境打包方式-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
