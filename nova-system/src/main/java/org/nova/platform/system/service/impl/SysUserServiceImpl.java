@@ -5,7 +5,6 @@ import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.digest.SM3;
 import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.query.QueryColumn;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -38,14 +37,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     private String initPassword;
 
 
-    public static final QueryColumn[] SAFE_COLUMNS = {
-    };
-
     @Override
     public Page<SysUserVo> selectPage(PageQuery<SysUserVo, SysUserDto> pageQuery) {
-        Page<SysUserVo> page = pageQuery.getPage();
-        page.setRecords(mapper.selectPage(page, pageQuery.getQuery()));
-        return page;
+        return mapper.selectPage(pageQuery.getPage(), pageQuery.getQuery());
     }
 
 

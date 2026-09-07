@@ -4,10 +4,10 @@ POST 127.0.0.1:8866/system/sysUser/page
 Content-Type: application/json
 
 {
+  "current": 1,
+  "size": 10,
   "query": {
-
-}
-
+  }
 }
 
 ### GET request to example server
