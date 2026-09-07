@@ -10,6 +10,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.nova.platform.common.database.utils.IdGenerate;
+import org.nova.platform.common.database.page.PageQuery;
 import org.nova.platform.system.dao.SysUserDao;
 import org.nova.platform.system.dao.SysUserRolDao;
 import org.nova.platform.system.entity.SysUser;
@@ -39,6 +40,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     public static final QueryColumn[] SAFE_COLUMNS = {
     };
+
+    @Override
+    public Page<SysUserVo> selectPage(PageQuery<SysUserVo, SysUserDto> pageQuery) {
+        Page<SysUserVo> page = pageQuery.getPage();
+        page.setRecords(mapper.selectPage(page, pageQuery.getQuery()));
+        return page;
+    }
 
 
     @Transactional

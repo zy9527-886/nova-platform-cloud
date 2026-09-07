@@ -4,9 +4,13 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.stp.SaLoginConfig;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SmUtil;
+import cn.hutool.crypto.asymmetric.KeyType;
+import cn.hutool.crypto.asymmetric.SM2;
 import com.alibaba.fastjson2.JSON;
 import com.mybatisflex.core.query.QueryWrapper;
+import org.bouncycastle.crypto.engines.SM2Engine;
 import org.nova.platform.auth.service.AuthService;
 import org.nova.platform.common.core.http.ResultUtils;
 import org.nova.platform.common.core.http.StatusCode;
@@ -26,6 +30,7 @@ import org.nova.platform.system.entity.vo.AuthResourceVo;
 import org.nova.platform.system.entity.vo.AuthUserVo;
 import org.nova.platform.system.enums.SystemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -62,6 +67,11 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private SysMenuDao sysMenuDao;
 
+    @Value("${base.security.sm.private-key:2064592f174e4fab950a3b3ef6b20cbe696b3cf319cfd6a2fcb1b1f8a01cf933}")
+    private String  privateKey;
+    @Value("${base.security.sm.public-key:046d96396327a558afddde5ab9e6562025923bd6491958a14f451bb5d8a986b5c10ed36ee2891ee969cef686aefe8b925975bf2cfcd6c398618a8b02ca454daf56}")
+    private String  publicKey;
+
     @Override
     public AuthLoginVo login(AuthLoginDto loginDto) {
         SysUser user = sysUserDao.selectOneByQuery(
@@ -87,7 +97,11 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             ResultUtils.throwServiceException(StatusCode.USER_NOT_EXIST);
         }
-        if (!Objects.equals(user.getPwd(), loginDto.getPassword())) {
+        //sm2 decrypt
+        SM2 sm2 = SmUtil.sm2(privateKey, null);
+        sm2.setMode(SM2Engine.Mode.C1C3C2);
+        String result = StrUtil.utf8Str(sm2.decrypt(loginDto.getPassword(), KeyType.PrivateKey));
+        if (!Objects.equals(user.getPwd(), result)) {
             ResultUtils.throwServiceException(StatusCode.PWD_ERROR);
         }
         if (Objects.equals(SystemEnum.EnableStatus.DISABLED.getCode(), user.getStus())) {

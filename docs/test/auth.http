@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "admin",
-  "password": "dd9fc35f3dc82b6330e70eaaa7591dac807bc92e6a71f1b992f72e8afe7db4ad"
+  "password": "Aa123456."
 }
 
 ### 4. Auth resources
@@ -39,30 +39,10 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 
-### 5. Role button path cache
-# GET /auth/role-button-paths
-#
-# Response data:
-# - Map<String, List<String>>
-# - roleId -> button menu path list.
-# - Cached by @Cacheable in Redis. Clear the cache when role-menu/menu changes.
-GET {{baseUrl}}/system/roleAndPaths
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
 
 
-### 6. Clear role button path cache
-# POST /auth/role-button-paths/clear
-#
-# Use this after role-menu or button-menu path changes.
-POST {{baseUrl}}/system/roleAndPaths/clear
-Authorization: Bearer {{accessToken}}
-Content-Type: application/json
 
-{}
-
-
-### 7. Logout
+### 3. Logout
 # POST /auth/logout
 #
 # Request headers:
@@ -71,15 +51,3 @@ POST {{baseUrl}}/system/logout
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
-{}
-
-
-### 7. roleAndPaths
-# GET /auth/roleAndPaths
-#
-# Request headers:
-# - Authorization: Bearer {{accessToken}}
-GET {{baseUrl}}/system/roleAndPaths
-Content-Type: application/json
-
-{}

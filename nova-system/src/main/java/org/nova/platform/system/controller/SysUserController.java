@@ -3,7 +3,9 @@ package org.nova.platform.system.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.nova.platform.common.core.http.ResultUtils;
+import org.nova.platform.common.database.page.PageQuery;
 import org.nova.platform.system.entity.dto.SysUserDto;
+import org.nova.platform.system.entity.vo.SysUserVo;
 import org.nova.platform.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +26,12 @@ import java.util.List;
 public class SysUserController {
     @Autowired
     private  SysUserService service;
+
+    @Operation(description = "分页查询")
+    @PostMapping("/page")
+    public Object page(@RequestBody PageQuery<SysUserVo, SysUserDto> pageQuery) {
+        return ResultUtils.suc(service.selectPage(pageQuery));
+    }
 
     @Operation(description = "查询单条数据")
     @GetMapping("/getById/{id}")

@@ -2,6 +2,7 @@ package org.nova.platform.system.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import org.nova.platform.common.database.page.PageQuery;
 import org.nova.platform.system.entity.SysUser;
 import org.nova.platform.system.entity.dto.SysUserDto;
 import org.nova.platform.system.entity.vo.SysUserVo;
@@ -14,7 +15,7 @@ import org.nova.platform.system.entity.vo.SysUserVo;
  */
 public interface SysUserService extends IService<SysUser> {
 
-  //  Page<SysUserVo> selectPage(Page<SysUserDto> user);
+    Page<SysUserVo> selectPage(PageQuery<SysUserVo, SysUserDto> pageQuery);
 
 
     /**

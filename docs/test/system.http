@@ -1,8 +1,12 @@
+### user
 ### GET request to example server
 POST 127.0.0.1:8866/system/sysUser/page
 Content-Type: application/json
 
 {
+  "query": {
+
+}
 
 }
 
@@ -24,6 +28,10 @@ Content-Type: application/json
 }
 
 
+### role
+
+
+### org
 ### GET request to example server
 POST 127.0.0.1:8866/system/sysOrg/page
 Content-Type: application/json

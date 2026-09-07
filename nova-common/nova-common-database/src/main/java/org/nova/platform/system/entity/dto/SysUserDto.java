@@ -29,7 +29,6 @@ public class SysUserDto   {
     private String userId;
 
     @Schema(description ="用户名")
-    @NotBlank
     private String userNm;
 
     @Schema(description ="备注")
