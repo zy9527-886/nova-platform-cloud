@@ -9,6 +9,9 @@ import org.nova.platform.system.entity.SysUser;
 import org.nova.platform.system.entity.SysUserRol;
 import org.nova.platform.system.entity.dto.SysUserDto;
 import org.nova.platform.system.entity.vo.SysUserVo;
+import org.nova.platform.system.entity.vo.SysUserRoleVo;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -19,6 +22,22 @@ import java.util.List;
  * @since 2026-08-13 14:24:23
  */
 public interface SysUserDao extends BaseMapper<SysUser> {
+
+    @Select("""
+            <script>
+            SELECT ur.user_id AS "userId",
+                   r.rol_id, r.rol_nm, r.rol_cd, r.rol_lv, r.rol_desc,
+                   r.org_id, r.is_pub, r.cre_per, r.cre_tm, r.updt_per, r.updt_tm
+            FROM sys_user_rol ur
+            INNER JOIN sys_rol r ON r.rol_id = ur.rol_id
+            WHERE ur.user_id IN
+            <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+                #{userId}
+            </foreach>
+            ORDER BY r.rol_lv, r.rol_id
+            </script>
+            """)
+    List<SysUserRoleVo> selectRolesByUserIds(@Param("userIds") List<String> userIds);
 
     QueryTable USER = new QueryTable("sys_user").as("u");
     QueryTable USER_ROLE = new QueryTable("sys_user_rol").as("ur");

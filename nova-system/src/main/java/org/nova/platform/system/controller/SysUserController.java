@@ -36,7 +36,7 @@ public class SysUserController {
     @Operation(description = "查询单条数据")
     @GetMapping("/getById/{id}")
     public Object getById(@PathVariable Serializable id){
-        return ResultUtils.suc(service.getById(id));
+        return ResultUtils.suc(service.getDetail(id));
     }
 
     @Operation(description = "新增或修改单条数据")
@@ -48,13 +48,13 @@ public class SysUserController {
     @Operation(description = "删除单条数据")
     @DeleteMapping("/removeById/{id}")
     public Object removeById(@PathVariable Serializable id) {
-        return ResultUtils.suc(service.removeById(id));
+        return ResultUtils.suc(service.removeByIdWithRoles(id));
     }
 
     @Operation(description = "批量删除数据")
     @DeleteMapping("/removeByIds")
     public Object removeByIds(@RequestBody List<Serializable> idList) {
-        return  ResultUtils.suc(service.removeByIds(idList));
+        return ResultUtils.suc(service.removeByIdsWithRoles(idList));
     }
 }
 

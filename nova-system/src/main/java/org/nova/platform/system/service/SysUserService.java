@@ -7,6 +7,9 @@ import org.nova.platform.system.entity.SysUser;
 import org.nova.platform.system.entity.dto.SysUserDto;
 import org.nova.platform.system.entity.vo.SysUserVo;
 
+import java.io.Serializable;
+import java.util.Collection;
+
 /**
  * 银行用户表(SysUser)表服务接口
  *
@@ -17,6 +20,8 @@ public interface SysUserService extends IService<SysUser> {
 
     Page<SysUserVo> selectPage(PageQuery<SysUserVo, SysUserDto> pageQuery);
 
+    SysUserVo getDetail(Serializable userId);
+
 
     /**
      * 增加或修改
@@ -24,6 +29,10 @@ public interface SysUserService extends IService<SysUser> {
      * @return
      */
     int saveOrUpdate(SysUserDto user);
+
+    boolean removeByIdWithRoles(Serializable userId);
+
+    boolean removeByIdsWithRoles(Collection<? extends Serializable> userIds);
 
 }
 
