@@ -28,6 +28,12 @@ public class SysRolController  extends BaseController<SysRol, SysRolService>  {
     @Autowired
     private SysRolService roleService;
 
+    @Operation(description = "查询全部角色")
+    @GetMapping("/list")
+    public Object list() {
+        return ResultUtils.suc(roleService.list());
+    }
+
     @Operation(description = "查询角色已绑定菜单")
     @GetMapping("/menuIds/{rolId}")
     public Object getMenuIds(@PathVariable String rolId) {

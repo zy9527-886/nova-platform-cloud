@@ -7,8 +7,10 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.nova.platform.common.core.exception.BusinessException;
 import org.nova.platform.common.database.utils.IdGenerate;
 import org.nova.platform.common.database.page.PageQuery;
+import org.nova.platform.system.dao.SysRolDao;
 import org.nova.platform.system.dao.SysUserDao;
 import org.nova.platform.system.dao.SysUserRolDao;
 import org.nova.platform.system.entity.SysUser;
@@ -43,6 +45,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
 
     @Autowired
     private SysUserRolDao sysUserRolDao;
+    @Autowired
+    private SysRolDao sysRolDao;
     @Value("${base.init.password:Aa123456.}")
     private String initPassword;
 
@@ -77,11 +81,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
             sysUser.setUserId(id)
                    .setPwd(SmUtil.sm3(initPassword));
             res= mapper.insertSelective(sysUser);
+            if (res <= 0) {
+                throw new BusinessException("新增用户失败");
+            }
             replaceUserRoles(id, user.getUserRolList(), false);
         } else {
+            if (mapper.selectOneById(user.getUserId()) == null) {
+                throw new BusinessException("用户不存在");
+            }
             //修改参数处理
             sysUser.setPwd(null);
             res=  mapper.update(sysUser,true);
+            if (res <= 0) {
+                throw new BusinessException("修改用户失败");
+            }
             replaceUserRoles(user.getUserId(), user.getUserRolList(), true);
         }
         return  res;
@@ -105,20 +118,23 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserDao, SysUser> impleme
     }
 
     private void replaceUserRoles(String userId, List<SysUserRol> submittedRoles, boolean clearExisting) {
+        Map<String, SysUserRol> uniqueRoles = new LinkedHashMap<>();
+        if (!CollectionUtils.isEmpty(submittedRoles)) {
+            submittedRoles.stream()
+                    .filter(Objects::nonNull)
+                    .filter(item -> StringUtils.isNotBlank(item.getRolId()))
+                    .forEach(item -> {
+                        item.setUserId(userId);
+                        uniqueRoles.putIfAbsent(item.getRolId(), item);
+                    });
+        }
+        if (!uniqueRoles.isEmpty()
+                && sysRolDao.selectListByIds(uniqueRoles.keySet()).size() != uniqueRoles.size()) {
+            throw new BusinessException("包含不存在的角色");
+        }
         if (clearExisting) {
             sysUserRolDao.deleteByQuery(QueryWrapper.create().eq(SysUserRol::getUserId, userId));
         }
-        if (CollectionUtils.isEmpty(submittedRoles)) {
-            return;
-        }
-        Map<String, SysUserRol> uniqueRoles = new LinkedHashMap<>();
-        submittedRoles.stream()
-                .filter(Objects::nonNull)
-                .filter(item -> StringUtils.isNotBlank(item.getRolId()))
-                .forEach(item -> {
-                    item.setUserId(userId);
-                    uniqueRoles.putIfAbsent(item.getRolId(), item);
-                });
         if (!uniqueRoles.isEmpty()) {
             List<SysUserRol> rows = List.copyOf(uniqueRoles.values());
             sysUserRolDao.insertBatchSelective(rows);

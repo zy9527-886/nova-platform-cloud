@@ -1,9 +1,12 @@
 package org.nova.platform.system.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.nova.platform.common.core.exception.BusinessException;
 import org.nova.platform.common.database.page.PageQuery;
+import org.nova.platform.system.dao.SysRolDao;
 import org.nova.platform.system.dao.SysUserDao;
 import org.nova.platform.system.dao.SysUserRolDao;
 import org.nova.platform.system.entity.SysRol;
@@ -18,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -31,15 +36,18 @@ class SysUserServiceImplTest {
 
     private SysUserDao mapper;
     private SysUserRolDao userRoleDao;
+    private SysRolDao roleDao;
     private SysUserServiceImpl service;
 
     @BeforeEach
     void setUp() {
         mapper = mock(SysUserDao.class);
         userRoleDao = mock(SysUserRolDao.class);
+        roleDao = mock(SysRolDao.class);
         service = new SysUserServiceImpl();
         ReflectionTestUtils.setField(service, "mapper", mapper);
         ReflectionTestUtils.setField(service, "sysUserRolDao", userRoleDao);
+        ReflectionTestUtils.setField(service, "sysRolDao", roleDao);
         ReflectionTestUtils.setField(service, "initPassword", "Aa123456.");
     }
 
@@ -53,6 +61,11 @@ class SysUserServiceImplTest {
                 new SysUserRol().setRolId("role-2")
         )));
         when(mapper.update(any(SysUser.class), eq(true))).thenReturn(1);
+        when(mapper.selectOneById("existing-user")).thenReturn(new SysUser().setUserId("existing-user"));
+        when(roleDao.selectListByIds(any())).thenReturn(List.of(
+                new SysRol().setRolId("role-1"),
+                new SysRol().setRolId("role-2")
+        ));
 
         assertEquals(1, service.saveOrUpdate(user));
 
@@ -87,7 +100,7 @@ class SysUserServiceImplTest {
 
     @Test
     void detailContainsAssignedRoles() {
-        SysUser entity = new SysUser().setUserId("user-1").setUserNm("alice");
+        SysUser entity = new SysUser().setUserId("user-1").setUserNm("alice").setPwd("secret-hash");
         when(mapper.selectOneById("user-1")).thenReturn(entity);
         SysUserRoleVo row = new SysUserRoleVo();
         row.setUserId("user-1");
@@ -98,6 +111,40 @@ class SysUserServiceImplTest {
 
         assertEquals("alice", result.getUserNm());
         assertEquals("role-1", result.getRoles().get(0).getRolId());
+    }
+
+    @Test
+    void detailNeverSerializesThePasswordHash() throws Exception {
+        SysUser entity = new SysUser().setUserId("user-1").setUserNm("alice").setPwd("secret-hash");
+        when(mapper.selectOneById("user-1")).thenReturn(entity);
+        when(mapper.selectRolesByUserIds(List.of("user-1"))).thenReturn(List.of());
+
+        String json = new ObjectMapper().writeValueAsString(service.getDetail("user-1"));
+
+        assertFalse(json.contains("\"pwd\""));
+        assertFalse(json.contains("secret-hash"));
+    }
+
+    @Test
+    void updatingANonexistentUserIsRejectedBeforeReplacingRoles() {
+        SysUserDto user = new SysUserDto();
+        user.setUserId("missing-user");
+        user.setUserNm("alice");
+        when(mapper.selectOneById("missing-user")).thenReturn(null);
+
+        assertThrows(BusinessException.class, () -> service.saveOrUpdate(user));
+
+        verify(mapper).selectOneById("missing-user");
+    }
+
+    @Test
+    void bindingANonexistentRoleIsRejected() {
+        SysUserDto user = new SysUserDto();
+        user.setUserNm("alice");
+        user.setUserRolList(List.of(new SysUserRol().setRolId("missing-role")));
+        when(roleDao.selectListByIds(any())).thenReturn(List.of());
+
+        assertThrows(BusinessException.class, () -> service.saveOrUpdate(user));
     }
 
     @Test

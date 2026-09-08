@@ -1,60 +1,158 @@
-### user
-### GET request to example server
-POST 127.0.0.1:8866/system/sysUser/page
+@baseUrl = http://127.0.0.1:8866/system
+@userId = 454737515030089728
+@roleId = 454737502468149248
+@menuId = 454737496545792000
+
+### 用户分页（角色信息随用户返回）
+POST {{baseUrl}}/sysUser/page
 Content-Type: application/json
 
 {
   "current": 1,
   "size": 10,
-  "query": {
-  }
+  "query": { "userNm": "" }
 }
 
-### GET request to example server
-GET 127.0.0.1:8866/system/sysUser/getById/446901116721532928
+### 用户详情（角色信息随用户返回）
+GET {{baseUrl}}/sysUser/getById/{{userId}}
+
+### 新增用户并绑定角色
+POST {{baseUrl}}/sysUser/saveOrUpdate
 Content-Type: application/json
 
 {
-
+  "userNm": "system-http-user",
+  "pwd": "123456",
+  "realNm": "接口测试用户",
+  "orgCd": "1000",
+  "stus": "1",
+  "rmk": "system.http",
+  "userRolList": [{ "rolId": "{{roleId}}" }]
 }
 
-### GET request to example server
-POST 127.0.0.1:8866/system/sysUser/saveOrUpdate
+### 修改用户及角色绑定（填写 userId）
+POST {{baseUrl}}/sysUser/saveOrUpdate
 Content-Type: application/json
 
 {
-"userNm": "admin",
-"rmk":"testtstt117"
+  "userId": "{{userId}}",
+  "userNm": "system-http-user-updated",
+  "realNm": "接口测试用户",
+  "orgCd": "1000",
+  "stus": "1",
+  "userRolList": []
 }
 
+### 删除用户
+DELETE {{baseUrl}}/sysUser/removeById/{{userId}}
 
-### role
+### 批量删除用户
+DELETE {{baseUrl}}/sysUser/removeByIds
+Content-Type: application/json
 
+["{{userId}}"]
 
-### org
-### GET request to example server
-POST 127.0.0.1:8866/system/sysOrg/page
+### 角色分页
+POST {{baseUrl}}/sysRol/page
 Content-Type: application/json
 
 {
-
+  "pageNumber": 1,
+  "pageSize": 10
 }
 
+### 角色详情
+GET {{baseUrl}}/sysRol/getById/{{roleId}}
 
-### GET request to example server
-POST 127.0.0.1:8866/system/sysOrg/saveOrUpdate
+### 查询全部角色（用户角色选择数据源）
+GET {{baseUrl}}/sysRol/list
+
+### 新增角色
+POST {{baseUrl}}/sysRol/saveOrUpdate
 Content-Type: application/json
 
 {
-  "orgCd": "998765",
-  "orgNm":"test111"
+  "rolNm": "接口测试角色",
+  "rolCd": "SYSTEM_HTTP_ROLE",
+  "rolLv": "1",
+  "rolDesc": "system.http",
+  "orgId": "1000",
+  "isPub": 0
 }
 
-
-### GET request to example server
-POST 127.0.0.1:8866/system/sysRol/page
+### 修改角色（填写 roleId）
+POST {{baseUrl}}/sysRol/saveOrUpdate
 Content-Type: application/json
 
 {
-
+  "rolId": "{{roleId}}",
+  "rolNm": "接口测试角色-已修改",
+  "rolCd": "SYSTEM_HTTP_ROLE",
+  "rolLv": "1",
+  "rolDesc": "system.http updated",
+  "orgId": "1000",
+  "isPub": 0
 }
+
+### 查询角色已绑定菜单
+GET {{baseUrl}}/sysRol/menuIds/{{roleId}}
+
+### 保存角色菜单绑定（空数组表示清空权限）
+POST {{baseUrl}}/sysRol/bindMenus
+Content-Type: application/json
+
+{
+  "rolId": "{{roleId}}",
+  "menuIds": ["{{menuId}}"]
+}
+
+### 删除角色（同步清理用户角色、角色菜单关系）
+DELETE {{baseUrl}}/sysRol/removeById/{{roleId}}
+
+### 批量删除角色
+DELETE {{baseUrl}}/sysRol/removeByIds
+Content-Type: application/json
+
+["{{roleId}}"]
+
+### 查询菜单树数据源
+GET {{baseUrl}}/sysMenu/list
+
+### 菜单详情
+GET {{baseUrl}}/sysMenu/getById/{{menuId}}
+
+### 新增菜单
+POST {{baseUrl}}/sysMenu/saveOrUpdate
+Content-Type: application/json
+
+{
+  "menuNm": "接口测试菜单",
+  "permCd": "system:http:test",
+  "path": "/system-http-test",
+  "prentId": "0",
+  "sort": 99,
+  "icon": "Menu",
+  "typ": "1",
+  "isDsp": 1,
+  "menuSource": "SYSTEM"
+}
+
+### 修改菜单（填写 menuId）
+POST {{baseUrl}}/sysMenu/saveOrUpdate
+Content-Type: application/json
+
+{
+  "menuId": "{{menuId}}",
+  "menuNm": "接口测试菜单-已修改",
+  "permCd": "system:http:test",
+  "path": "/system-http-test",
+  "prentId": "0",
+  "sort": 100,
+  "icon": "Menu",
+  "typ": "1",
+  "isDsp": 1,
+  "menuSource": "SYSTEM"
+}
+
+### 删除叶子菜单（存在子菜单时后端拒绝）
+DELETE {{baseUrl}}/sysMenu/removeById/{{menuId}}
