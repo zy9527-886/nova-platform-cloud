@@ -151,7 +151,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Cacheable(value = RedisConfig.CACHE_NAME_FOREVER, key = "'auth:role-button-paths'")
     public Map<String, List<String>> getRoleButtonPaths() {
         return sysMenuDao.selectRoleButtonPaths(SystemEnum.MenuType.BUTTON.getCode()).stream()
                 .filter(row -> row.get("roleId") != null && row.get("path") != null)
@@ -163,7 +162,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @CacheEvict(value = RedisConfig.CACHE_NAME_FOREVER, key = "'auth:role-button-paths'")
     public void clearRoleButtonPaths() {
     }
 

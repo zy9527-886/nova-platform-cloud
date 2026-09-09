@@ -172,7 +172,7 @@ Content-Type: application/json
   }
 }
 
-### 查询机构树（Redis 缓存 30 分钟）
+### 查询机构树（Redis 缓存 1 小时）
 GET {{baseUrl}}/sysOrg/tree
 
 ### 机构详情

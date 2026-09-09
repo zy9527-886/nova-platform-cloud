@@ -7,8 +7,11 @@ import jakarta.validation.Valid;
 import org.nova.platform.auth.service.AuthService;
 import org.nova.platform.common.core.http.ResultUtils;
 import org.nova.platform.common.core.http.StatusCode;
+import org.nova.platform.common.database.config.RedisConfig;
 import org.nova.platform.system.entity.dto.AuthLoginDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,12 +67,14 @@ public class AuthController {
 
     @GetMapping("/roleAndPaths")
     @Operation(description = "role button permission paths")
+    @Cacheable(value = RedisConfig.CACHE_NAME_MINUTES_30, key = "'auth:role-button-paths'")
     public Object roleButtonPaths() {
         return ResultUtils.suc(authService.getRoleButtonPaths());
     }
 
     @PostMapping("/roleAndPaths/clear")
     @Operation(description = "clear role button permission path cache")
+    @CacheEvict(value = RedisConfig.CACHE_NAME_MINUTES_30, key = "'auth:role-button-paths'")
     public Object clearRoleButtonPaths() {
         authService.clearRoleButtonPaths();
         return ResultUtils.suc(true);

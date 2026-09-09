@@ -79,6 +79,7 @@ public interface SysUserDao extends BaseMapper<SysUser> {
                     .and(ID_NO.likeRight(query.getIdNo(), SysUserDao::hasText))
                     .and(REAL_NM.likeRight(query.getRealNm(), SysUserDao::hasText))
                     .and(TEL.likeRight(query.getTel(), SysUserDao::hasText))
+                    .and(ORG_CD.likeRight(query.getOrgCd(), SysUserDao::hasText))
                     .and(STUS.eq(query.getStus(), SysUserDao::hasText));
 
             if (query.getUserRolList() != null && !query.getUserRolList().isEmpty()) {

@@ -3,11 +3,13 @@ package org.nova.platform.system.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import org.nova.platform.common.core.http.ResultUtils;
+import org.nova.platform.common.database.config.RedisConfig;
 import org.nova.platform.common.database.controller.BaseController;
 import org.nova.platform.system.entity.SysRol;
 import org.nova.platform.system.entity.dto.SysRolMenuBindDto;
 import org.nova.platform.system.service.SysRolService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +44,7 @@ public class SysRolController  extends BaseController<SysRol, SysRolService>  {
 
     @Operation(description = "保存角色菜单绑定")
     @PostMapping("/bindMenus")
+    @CacheEvict(value = RedisConfig.CACHE_NAME_MINUTES_30, key = "'auth:role-button-paths'")
     public Object bindMenus(@RequestBody @Validated SysRolMenuBindDto request) {
         return ResultUtils.suc(roleService.bindMenus(request));
     }

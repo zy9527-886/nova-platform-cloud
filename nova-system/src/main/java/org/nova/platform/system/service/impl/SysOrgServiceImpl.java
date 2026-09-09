@@ -16,12 +16,10 @@ import org.nova.platform.system.entity.dto.SysOrgDto;
 import org.nova.platform.system.entity.vo.SysOrgTreeVo;
 import org.nova.platform.system.service.SysOrgService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -38,13 +36,8 @@ import java.util.Map;
 @Service("sysOrgService")
 public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements SysOrgService {
 
-    public static final String ORG_TREE_CACHE_KEY = "system:org:tree";
-
     @Autowired
     private SysUserDao sysUserDao;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public Page<SysOrg> selectPage(PageQuery<SysOrg, SysOrgDto> pageQuery) {
@@ -52,13 +45,7 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<SysOrgTreeVo> getTree() {
-        Object cached = redisTemplate.opsForValue().get(ORG_TREE_CACHE_KEY);
-        if (cached instanceof List<?>) {
-            return (List<SysOrgTreeVo>) cached;
-        }
-
         List<SysOrg> organizations = new ArrayList<>(mapper.selectAll());
         organizations.sort(Comparator.comparing(SysOrg::getOrgCd, Comparator.nullsLast(String::compareTo)));
 
@@ -75,7 +62,6 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
                 parent.getChildren().add(node);
             }
         });
-        redisTemplate.opsForValue().set(ORG_TREE_CACHE_KEY, roots, Duration.ofMinutes(30));
         return roots;
     }
 
@@ -106,9 +92,6 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
                     .setOrgLvCd(existing.getOrgLvCd());
             affected = mapper.update(entity, true);
         }
-        if (affected > 0) {
-            clearTreeCache();
-        }
         return affected > 0;
     }
 
@@ -118,9 +101,6 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
         SysOrg organization = mapper.selectOneById(id);
         validateCanDelete(organization);
         boolean removed = mapper.deleteById(id) > 0;
-        if (removed) {
-            clearTreeCache();
-        }
         return removed;
     }
 
@@ -136,9 +116,6 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
         }
         organizations.forEach(this::validateCanDelete);
         boolean removed = mapper.deleteBatchByIds(ids) > 0;
-        if (removed) {
-            clearTreeCache();
-        }
         return removed;
     }
 
@@ -173,10 +150,6 @@ public class SysOrgServiceImpl extends ServiceImpl<SysOrgDao, SysOrg> implements
 
     private SysOrgTreeVo toTreeNode(SysOrg entity) {
         return BeanUtil.copyProperties(entity, SysOrgTreeVo.class);
-    }
-
-    private void clearTreeCache() {
-        redisTemplate.delete(ORG_TREE_CACHE_KEY);
     }
 
 }

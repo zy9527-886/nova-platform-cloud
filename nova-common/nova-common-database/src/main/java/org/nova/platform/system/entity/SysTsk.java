@@ -28,7 +28,7 @@ public class SysTsk  {
     @Id(keyType = KeyType.Generator, value = KeyGenerators.snowFlakeId) 
     private String tskId;
 
-    @Schema(description ="任务类型")      
+    @Schema(description ="任务类型 ")
     private String tskTyp;
 
     @Schema(description ="任务名")      
@@ -40,7 +40,7 @@ public class SysTsk  {
     @Schema(description ="任务日期")      
     private String tskDt;
 
-    @Schema(description ="状态")      
+    @Schema(description ="状态:0-执行中 1-成功 2-失败")
     private String stus;
 
     @Schema(description ="创建人")      
