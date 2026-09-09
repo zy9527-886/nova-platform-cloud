@@ -2,6 +2,7 @@
 @userId = 454737515030089728
 @roleId = 454737502468149248
 @menuId = 454737496545792000
+@orgId = 454855266826530816
 
 ### 用户分页（角色信息随用户返回）
 POST {{baseUrl}}/sysUser/page
@@ -156,3 +157,55 @@ Content-Type: application/json
 
 ### 删除叶子菜单（存在子菜单时后端拒绝）
 DELETE {{baseUrl}}/sysMenu/removeById/{{menuId}}
+
+### 机构分页查询
+POST {{baseUrl}}/sysOrg/page
+Content-Type: application/json
+
+{
+  "current": 1,
+  "size": 10,
+  "query": {
+    "orgCd": "",
+    "orgNm": "",
+    "orgStus": ""
+  }
+}
+
+### 查询机构树（Redis 缓存 30 分钟）
+GET {{baseUrl}}/sysOrg/tree
+
+### 机构详情
+GET {{baseUrl}}/sysOrg/getById/{{orgId}}
+
+### 新增根机构（机构代码由后端生成）
+POST {{baseUrl}}/sysOrg/saveOrUpdate
+Content-Type: application/json
+
+{
+  "orgNm": "接口测试机构",
+  "orgPrentId": "0",
+  "orgAddr": "测试地址",
+  "ctctPer": "测试人员",
+  "telNo": "01012345678",
+  "orgStus": "1"
+}
+
+### 修改机构（上级机构和机构代码不可修改）
+POST {{baseUrl}}/sysOrg/saveOrUpdate
+Content-Type: application/json
+
+{
+  "orgId": "{{orgId}}",
+  "orgNm": "接口测试机构-已修改",
+  "orgStus": "1"
+}
+
+### 删除机构（存在下级机构或关联用户时后端拒绝）
+DELETE {{baseUrl}}/sysOrg/removeById/{{orgId}}
+
+### 批量删除机构
+DELETE {{baseUrl}}/sysOrg/removeByIds
+Content-Type: application/json
+
+["{{orgId}}"]
