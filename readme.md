@@ -28,20 +28,6 @@ nova-platform-cloud/
 2. 参考 [docs/init](docs/init) 初始化数据库，并导入、调整 Nacos 配置。建表脚本引用的序列需提前创建，管理员账号与角色需自行初始化。
 3. 在项目根目录构建：
 
-```shell
-mvn -Pdev -pl nova-auth,nova-system -am clean package -DskipTests
-```
-
-4. 在两个终端分别启动服务：
-
-```shell
-java -jar nova-auth/target/nova-auth-1.0-SNAPSHOT.jar
-```
-
-```shell
-java -jar nova-system/target/nova-system-1.0-SNAPSHOT.jar
-```
-
 默认开发环境的 Nacos 地址为 `127.0.0.1:8888`，命名空间 ID 为 `dev`。使用随附 Nacos 配置时，认证服务地址为 `http://localhost:8867/auth`，系统服务地址为 `http://localhost:8866/system`；实际地址以运行配置为准。
 
 数据库连接、Redis、密钥等配置需替换为自己的环境值。接口调试示例见 [docs/test](docs/test)，登录密码需按当前实现加密后提交。
