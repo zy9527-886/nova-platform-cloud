@@ -297,7 +297,7 @@
             <id>dev</id>
             <properties>
                 <profiles.active>dev</profiles.active>
-                <nacos.config.addr>139.224.192.92:8888</nacos.config.addr>
+                <nacos.config.addr>127.0.0.1:8888</nacos.config.addr>
                 <nacos.config.namespace>dev</nacos.config.namespace>
                 <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
             </properties>
